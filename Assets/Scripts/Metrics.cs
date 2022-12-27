@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Metrics : MonoBehaviour
 {
-    public Metrics(int corners, bool oriented=false){
+    public Metrics(int corners = 6, bool oriented=false){
         this.numCorners = corners;
         this.oriented = oriented;
     }
@@ -60,7 +60,9 @@ public class Metrics : MonoBehaviour
     public List<Vector3> NeighborsPositions { 
         get{
             return _neighborsPositions;
-        } }
+        } 
+    }
+
     private void GenerateCorners(){
         if(_neighborsPositions == null)
             _neighborsPositions = new List<Vector3>();
