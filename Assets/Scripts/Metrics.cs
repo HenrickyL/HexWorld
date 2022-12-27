@@ -1,26 +1,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
 public class Metrics : MonoBehaviour
 {
-    public Metrics(int corners = 6, bool oriented=false){
-        this.numCorners = corners;
+    public Metrics(int? corners, float? length, bool oriented=false){
+        this.numCorners = corners ?? 6;
         this.oriented = oriented;
+        Debug.Log($"len: {length}");
+        this._outerRadius = length ?? 10f;
     }
-    public const float outerRadius = 10f;
+    private float _outerRadius;
+    public float OuterRadius {get{return _outerRadius;}}
     
     public float EdgeSize{get{
         return XOffset*2;
     }}
     private  float XOffset { get{
-        return outerRadius*Mathf.Sin(Angle/2);
+        return OuterRadius*Mathf.Sin(Angle/2);
     } }
     private  float ZOffset { get{
-        return outerRadius*Mathf.Cos(Angle/2);
+        return OuterRadius*Mathf.Cos(Angle/2);
     } }
     public  float InnerRadius { get{
-        return  outerRadius*Mathf.Cos(Angle);
+        return  OuterRadius*Mathf.Cos(Angle);
     } }
     public int numCorners=12;
 
@@ -69,9 +71,9 @@ public class Metrics : MonoBehaviour
         float startX = !this.oriented? 0f: XOffset;
         float startZ = !this.oriented? 0f: ZOffset;
         float _angle = !this.oriented? 0f: Angle/2;
-        var firts = new Vector3( outerRadius*Mathf.Sin(_angle), 0f,  outerRadius*Mathf.Cos(_angle));
+        var firts = new Vector3( OuterRadius*Mathf.Sin(_angle), 0f,  OuterRadius*Mathf.Cos(_angle));
         for(int i=0; i< numCorners; i++){
-            _corners.Add(new Vector3( outerRadius*Mathf.Sin(_angle), 0f,  outerRadius*Mathf.Cos(_angle)));
+            _corners.Add(new Vector3( OuterRadius*Mathf.Sin(_angle), 0f,  OuterRadius*Mathf.Cos(_angle)));
             _angle+= Angle;
         }
         _corners.Add(firts);

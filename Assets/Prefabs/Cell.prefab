@@ -203,6 +203,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numVertices: 6
+  length: 5
+  height: 3
   oriented: 1
   neighbors:
   - {fileID: 0}
@@ -216,5 +218,3 @@ MonoBehaviour:
   cellLabelPrefab: {fileID: 2859382287095429150, guid: a9f96377b1254864a9604ded6b699e18, type: 3}
   showLabel: 0
   isUpDirection: 1
-  height: 3
-  duration: 4

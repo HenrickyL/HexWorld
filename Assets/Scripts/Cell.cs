@@ -8,6 +8,10 @@ public class Cell : MonoBehaviour
 	public static int count=-1;	
 	public static int MAX = 200;
 	[Range(3, 20)]public int numVertices = 6;
+	[Range(1f, 10f)]public float length =5f;
+	[Range(0, 20f)]public float height = 3f;
+
+
 	public bool oriented = false;
 	Canvas canvas;
 	Text label;
@@ -42,11 +46,9 @@ public class Cell : MonoBehaviour
 			return isUpDirection? Vector3.up*targetHeight: - Vector3.up*targetHeight;
 		}
 	}
-	public bool isUpDirection = true;
+	public bool isUpDirection;
 
-	[Range(0, 20f)]public float height = 3f;
     private float targetHeight = 0f;
-
 	private float LerpTime{
 		get{
 			return TimeHelper.LerpTime;
@@ -76,7 +78,7 @@ public class Cell : MonoBehaviour
 		}
 	}
     void Awake() {
-		metric = new Metrics(numVertices,oriented);
+		metric = new Metrics(numVertices, length, oriented);
 		neighbors = new Cell[numVertices];
 		CreateCanvasLabel();
 		vertices = new List<Vector3>();
@@ -94,6 +96,7 @@ public class Cell : MonoBehaviour
     }
    
 	void LateUpdate() {
+		metric = new Metrics(numVertices, length, oriented);
 		UpdateMesh();
 		LerpHight();
 	}
@@ -184,8 +187,8 @@ public class Cell : MonoBehaviour
 			);
 		}else{
 			AddTriangle(
-				Center + metric.Corners[i+1],
 				Center + metric.Corners[i],
+				Center + metric.Corners[i+1],
 				Center
 			);
 		}
@@ -202,8 +205,8 @@ public class Cell : MonoBehaviour
 		}else{
 			AddTriangle(
 				AnotherCenter,
-				AnotherCenter + metric.Corners[i],
-				AnotherCenter + metric.Corners[i+1]
+				AnotherCenter + metric.Corners[i+1],
+				AnotherCenter + metric.Corners[i]
 			);
 		}
 		AddTriangleColor(c);
@@ -285,12 +288,11 @@ public class Cell : MonoBehaviour
 		Cell current = Instantiate<Cell>(prefab);
 		current.transform.position = grid.transform.position;
 		current.transform.SetParent(grid.transform);
-		grid.center = current;
+		grid.Center = current;
 		return current.GenerateNeighbors(prefab,grid,rings,angle);
 	}
 
 }
-
 
 
 // public class Neighbors{

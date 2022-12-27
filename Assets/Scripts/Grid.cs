@@ -10,28 +10,28 @@ public class Grid : MonoBehaviour
 	public Cell cellPrefab;
     public bool oriented = true;
     public List<Cell> cells;
-    public Cell center;
+    public Cell Center {get; set;}
     public float cellLenght {get;}
     public Text cellLabelPrefab;
     private Metrics metric;
     [Range(0,100)] public int radius = 5;
-    private float cellEdgeSize {get{return metric.EdgeSize;}}
+    private float cellEdgeSize {get{return cellPrefab.EdgeSize;}}
 
     void Awake () {
-        metric = new Metrics(cellPrefab.numVertices, oriented);
+        
         angle = 2*Mathf.Atan(cellEdgeSize/radius);
         rings = (int)(90*Mathf.Deg2Rad/angle);
         Debug.Log($"rings: {rings} - angle: {angle} - edge: {cellEdgeSize}");
 		StartCoroutine(Cell.GenerateNeighbors(this, cellPrefab,rings,angle));
 	}
     private void RotateCells(){
-        if(center && center.neighbors[1]){
-            center.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-            var reference = Vector3.right - center.transform.position;
-            var neighPos = center.neighbors[1].transform.position - center.transform.position;
+        if(Center && Center.neighbors[1]){
+            Center.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
+            var reference = Vector3.right - Center.transform.position;
+            var neighPos = Center.neighbors[1].transform.position - Center.transform.position;
             float angle = Vector3.Angle(reference, neighPos);
-            var currentRot = center.neighbors[1].transform.localRotation;
-            center.neighbors[1].transform.localRotation = new Quaternion(currentRot.x+angle*Mathf.Rad2Deg,currentRot.y,currentRot.z,0f);
+            var currentRot = Center.neighbors[1].transform.localRotation;
+            Center.neighbors[1].transform.localRotation = new Quaternion(currentRot.x+angle*Mathf.Rad2Deg,currentRot.y,currentRot.z,0f);
         }
     }
 
