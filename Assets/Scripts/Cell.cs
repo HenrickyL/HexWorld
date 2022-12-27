@@ -46,16 +46,10 @@ public class Cell : MonoBehaviour
 
 	[Range(0, 20f)]public float height = 3f;
     private float targetHeight = 0f;
-	private int totalSteps = 16; // 16 morph steps
-	public float duration = 4f; // 4 seconds
-	private float mps; // morphs per second
+
 	private float LerpTime{
 		get{
-			mps = (float)duration*1000/(float)totalSteps;
-			float t = Time.realtimeSinceStartup; // Should actually be since animation start
-			int arrayIndex = Mathf.FloorToInt( t / mps );
-			float p = (t-((float)arrayIndex)*mps) / mps;
-			return p;
+			return TimeHelper.LerpTime;
 		}
 	}
 	
