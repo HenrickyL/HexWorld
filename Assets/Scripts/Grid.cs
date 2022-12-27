@@ -24,13 +24,13 @@ public class Grid : MonoBehaviour
         Debug.Log($"rings: {rings} - angle: {angle} - edge: {cellEdgeSize}");
 	}
     private void RotateCells(){
-        if(Center && Center.neighbors[1]){
+        if(Center && Center.neighbors[0]){
             Center.GetComponent<RectTransform>().anchoredPosition3D = Vector3.zero;
-            var reference = Vector3.right - Center.transform.position;
-            var neighPos = Center.neighbors[1].transform.position - Center.transform.position;
-            float angle = Vector3.Angle(reference, neighPos);
-            var currentRot = Center.neighbors[1].transform.localRotation;
-            Center.neighbors[1].transform.localRotation = new Quaternion(currentRot.x+angle*Mathf.Rad2Deg,currentRot.y,currentRot.z,0f);
+            var reference = Vector3.right - Center.transform.localPosition;
+            var neighPos = Center.neighbors[0].transform.position - Center.transform.position;
+            angle += Vector3.Angle(reference, neighPos);
+            var currentRot = Center.neighbors[0].transform.localRotation;
+            Center.neighbors[0].transform.localRotation = new Quaternion(currentRot.x+angle*Mathf.Rad2Deg,currentRot.y,currentRot.z,0f);
         }
     }
 

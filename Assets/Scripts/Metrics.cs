@@ -70,12 +70,12 @@ public class Metrics : MonoBehaviour
         float startX = !this.oriented? 0f: XOffset;
         float startZ = !this.oriented? 0f: ZOffset;
         float _angle = !this.oriented? 0f: Angle/2;
-        var firts = new Vector3( OuterRadius*Mathf.Sin(_angle), 0f,  OuterRadius*Mathf.Cos(_angle));
+        var first = new Vector3( OuterRadius*Mathf.Sin(_angle), 0f,  OuterRadius*Mathf.Cos(_angle));
         for(int i=0; i< numCorners; i++){
             _corners.Add(new Vector3( OuterRadius*Mathf.Sin(_angle), 0f,  OuterRadius*Mathf.Cos(_angle)));
             _angle+= Angle;
         }
-        _corners.Add(firts);
+        _corners.Add(first);
         //directions
         _angle = /*AngleRect - */(this.oriented? 0f: Angle/2);
         for(int i=0; i<=numCorners; i++){

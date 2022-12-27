@@ -10,8 +10,10 @@ public class Cell : MonoBehaviour
 	[Range(3, 20)]public int numVertices = 6;
 	[Range(1f, 20f)]public float length =10f;
 	private float targetLength =5f;
+	private bool isUnevenLength = true;
 	[Range(0, 20f)]public float height = 3f;
     private float targetHeight = 0f;
+	private bool isUnevenHeight = true;
 
 
 	public bool oriented = false;
@@ -25,9 +27,10 @@ public class Cell : MonoBehaviour
 	List<Color> colors;
 	[SerializeField]
 	public Cell[] neighbors;
+	private List<Vector3> Corners {get; set;}
 	public float EdgeSize {
 		get{
-			return metric.EdgeSize;
+			return metric ? metric.EdgeSize: 6;
 		}
 	}
 	public Text cellLabelPrefab;
@@ -78,8 +81,13 @@ public class Cell : MonoBehaviour
 			label.text = this.name;
 		}
 	}
-    void Awake() {
+	private void SetMetrics(){
 		metric = new Metrics(numVertices, length, oriented);
+		Corners = metric.Corners;
+	}
+
+    void Awake() {
+		SetMetrics();
 		neighbors = new Cell[numVertices];
 		CreateCanvasLabel();
 		vertices = new List<Vector3>();
@@ -102,11 +110,20 @@ public class Cell : MonoBehaviour
 	}
 
 	private void LerpValues(){
-		if(height != targetHeight){
+		if(isUnevenHeight){
 			targetHeight = Mathf.Lerp(targetHeight, height, LerpTime);
+			isUnevenHeight = false;
+		}
+
+		if(isUnevenLength){
+			targetLength = Mathf.Lerp(targetLength, length, LerpTime);
+			isUnevenLength=false;
+		}
+		if(height != targetHeight){
+			isUnevenHeight = true;
 		}
 		if(length != targetLength){
-			targetLength = Mathf.Lerp(targetLength, length, LerpTime);
+			isUnevenLength = true;
 		}
 	}
 
@@ -185,13 +202,13 @@ public class Cell : MonoBehaviour
 		if(isUpDirection){
 			AddTriangle(
 				AnotherCenter,
-				AnotherCenter + metric.Corners[i],
-				AnotherCenter + metric.Corners[i+1]
+				AnotherCenter + Corners[i],
+				AnotherCenter + Corners[i+1]
 			);
 		}else{
 			AddTriangle(
-				Center + metric.Corners[i],
-				Center + metric.Corners[i+1],
+				Center + Corners[i],
+				Center + Corners[i+1],
 				Center
 			);
 		}
@@ -201,15 +218,15 @@ public class Cell : MonoBehaviour
 	{
 		if(isUpDirection){
 			AddTriangle(
-				Center + metric.Corners[i+1],
-				Center + metric.Corners[i],
+				Center + Corners[i+1],
+				Center + Corners[i],
 				Center
 			);
 		}else{
 			AddTriangle(
 				AnotherCenter,
-				AnotherCenter + metric.Corners[i+1],
-				AnotherCenter + metric.Corners[i]
+				AnotherCenter + Corners[i+1],
+				AnotherCenter + Corners[i]
 			);
 		}
 		AddTriangleColor(c);
@@ -217,14 +234,14 @@ public class Cell : MonoBehaviour
 	private void AddQuadFace(int i, Color c1, Color c2){
 		if(isUpDirection){
 			AddQuad(
-				Center + metric.Corners[i+1],
-				Center + metric.Corners[i],
+				Center + Corners[i+1],
+				Center + Corners[i],
 				targetHeight
 			);
 		}else{
 			AddQuad(
-				Center + metric.Corners[i],
-				Center + metric.Corners[i+1],
+				Center + Corners[i],
+				Center + Corners[i+1],
 				targetHeight
 			);
 		}
