@@ -18,11 +18,10 @@ public class Grid : MonoBehaviour
     private float cellEdgeSize {get{return cellPrefab.EdgeSize;}}
 
     void Awake () {
-        
+		StartCoroutine(Cell.GenerateNeighbors(this, cellPrefab,rings,angle));
         angle = 2*Mathf.Atan(cellEdgeSize/radius);
         rings = (int)(90*Mathf.Deg2Rad/angle);
         Debug.Log($"rings: {rings} - angle: {angle} - edge: {cellEdgeSize}");
-		StartCoroutine(Cell.GenerateNeighbors(this, cellPrefab,rings,angle));
 	}
     private void RotateCells(){
         if(Center && Center.neighbors[1]){

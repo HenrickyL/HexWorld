@@ -6,7 +6,6 @@ public class Metrics : MonoBehaviour
     public Metrics(int? corners, float? length, bool oriented=false){
         this.numCorners = corners ?? 6;
         this.oriented = oriented;
-        Debug.Log($"len: {length}");
         this._outerRadius = length ?? 10f;
     }
     private float _outerRadius;

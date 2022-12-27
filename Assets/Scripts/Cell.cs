@@ -6,10 +6,12 @@ using UnityEngine;using UnityEngine.UI;
 public class Cell : MonoBehaviour
 {
 	public static int count=-1;	
-	public static int MAX = 200;
+	public static int MAX = 500;
 	[Range(3, 20)]public int numVertices = 6;
-	[Range(1f, 10f)]public float length =5f;
+	[Range(1f, 20f)]public float length =10f;
+	private float targetLength =5f;
 	[Range(0, 20f)]public float height = 3f;
+    private float targetHeight = 0f;
 
 
 	public bool oriented = false;
@@ -46,9 +48,8 @@ public class Cell : MonoBehaviour
 			return isUpDirection? Vector3.up*targetHeight: - Vector3.up*targetHeight;
 		}
 	}
-	public bool isUpDirection;
+	public bool isUpDirection = true;
 
-    private float targetHeight = 0f;
 	private float LerpTime{
 		get{
 			return TimeHelper.LerpTime;
@@ -87,7 +88,7 @@ public class Cell : MonoBehaviour
 		mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
     	UpdateMesh();
-		LerpHight();
+		LerpValues();
 		DrawLabel();
 		if(!showLabel){
 			count++;
@@ -96,14 +97,16 @@ public class Cell : MonoBehaviour
     }
    
 	void LateUpdate() {
-		metric = new Metrics(numVertices, length, oriented);
 		UpdateMesh();
-		LerpHight();
+		LerpValues();
 	}
 
-	private void LerpHight(){
+	private void LerpValues(){
 		if(height != targetHeight){
 			targetHeight = Mathf.Lerp(targetHeight, height, LerpTime);
+		}
+		if(length != targetLength){
+			targetLength = Mathf.Lerp(targetLength, length, LerpTime);
 		}
 	}
 
@@ -285,11 +288,16 @@ public class Cell : MonoBehaviour
 	}
 
 	public static IEnumerator<WaitForSeconds> GenerateNeighbors(Grid grid,Cell prefab, int rings, float angle){
+		var current = GenerateNeighbors_SetInitialValues(grid, prefab);
+		return current.GenerateNeighbors(prefab,grid,rings,angle);
+	}
+	private static Cell GenerateNeighbors_SetInitialValues(Grid grid,Cell prefab){
 		Cell current = Instantiate<Cell>(prefab);
 		current.transform.position = grid.transform.position;
 		current.transform.SetParent(grid.transform);
 		grid.Center = current;
-		return current.GenerateNeighbors(prefab,grid,rings,angle);
+		current.color = Color.green;
+		return current;
 	}
 
 }
